@@ -1,13 +1,48 @@
+Rails:
+  Enabled: true
+
+AllCops:
+  DisplayCopNames: true
+  DisplayStyleGuide: true
+
+  Include:
+    - "**/Rakefile"
+    - "**/config.ru"
+  Exclude:
+    - "vendor/**/*"
+    - "spec/fixtures/**/*"
+    - "bin/**/*"
+    - "script/**/*"
+Metrics/LineLength:
+  Max: 120
+Rails/Date:
+  Enabled: false
+Rails/TimeZone:
+  Enabled: false
+AllCops:
+  TargetRubyVersion: 2.3
 Style/AndOr:
   EnforcedStyle: conditionals
 Style/CaseIndentation:
   IndentOneStep: true
-Style/EmptyMethod:
-  EnforcedStyle: expanded
-Style/MethodDefParentheses:
-  EnforcedStyle: require_no_parentheses
-Style/NumericLiterals:
+Style/Documentation:
   Enabled: false
+Style/EachWithObject:
+  Enabled: false
+Style/ExtraSpacing:
+  Exclude:
+    - "config/routes.rb"
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Style/HashSyntax:
+  Exclude:
+    - "lib/tasks/**/*"
+Style/MultilineOperationIndentation:
+  EnforcedStyle: indented
+Style/NumericLiterals:
+  Enabled: true
+Style/EmptyLinesAroundClassBody:
+  EnforcedStyle: empty_lines
 Style/PercentLiteralDelimiters:
   PreferredDelimiters:
     "%w": "[]"
@@ -15,23 +50,53 @@ Style/PercentLiteralDelimiters:
     "%i": "[]"
     "%I": "[]"
     "%r": "()"
-Style/SafeNavigation:
-  Enabled: false
 Style/SignalException:
   EnforcedStyle: semantic
 Style/SingleLineBlockParams:
   Enabled: false
-Style/SpaceInsideHashLiteralBraces:
-  EnforcedStyle: no_space
 Style/StringLiterals:
   EnforcedStyle: double_quotes
-Style/StringLiteralsInInterpolation:
-  EnforcedStyle: double_quotes
-Style/VariableNumber:
-  EnforcedStyle: snake_case
-Metrics/BlockLength:
+Style/MultilineMethodCallIndentation:
   Exclude:
-    - "**/*.gemspec"
-    - "spec/**/*"
-Metrics/LineLength:
-  Max: 120
+    - "spec/**/*.rb"
+
+# Rules that annoy me
+Style/SpaceInsideBrackets:
+  Enabled: false
+Style/FormatString:
+  Enabled: false
+
+Rails/Output:
+  Severity: fatal
+  Exclude:
+    - "db/seeds.rb"
+    - "lib/lets_encrypt_route53.rb"
+    - "lib/task_helpers.rb"
+    - "lib/tasks/**/*"
+
+# Rubocop's global exclude seems to fail to exclude the bin/ dir, so set all
+# the cops that are failing manually, since most of these files are
+# auto-generated anyways. Also, if the rules also appear above, we need to copy
+# the same attrs, because YAML won't merge, only overwrite.
+
+# Style/StringLiterals:
+#   EnforcedStyle: double_quotes
+#   Exclude:
+#     - "bin/**/*"
+# Style/FrozenStringLiteralComment:
+#   Exclude:
+#     - "bin/**/*"
+# Style/LeadingCommentSpace:
+#   Exclude:
+#     - "bin/**/*"
+# Style/SpaceInsideParens:
+#   Exclude:
+#     - "bin/**/*"
+# Style/AlignParameters:
+#   Exclude:
+#     - "bin/**/*"
+# Style/ExtraSpacing:
+#   Exclude:
+#     - "bin/**/*"
+#   Exclude:
+#     - "config/routes.rb"

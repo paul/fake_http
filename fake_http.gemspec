@@ -4,8 +4,8 @@ $LOAD_PATH.push File.expand_path("../lib", __FILE__)
 require "fake_http/identity"
 
 Gem::Specification.new do |spec|
-  spec.name = FakeHttp::Identity.name
-  spec.version = FakeHttp::Identity.version
+  spec.name = FakeHTTP::Identity.name
+  spec.version = FakeHTTP::Identity.version
   spec.platform = Gem::Platform::RUBY
   spec.authors = ["Paul Sadauskas"]
   spec.email = ["psadauskas@gmail.com"]
@@ -17,6 +17,9 @@ Gem::Specification.new do |spec|
     spec.signing_key = Gem.default_key_path
     spec.cert_chain = [Gem.default_cert_path]
   end
+
+  spec.add_runtime_dependency "http"
+  spec.add_runtime_dependency "mustermann"
 
   spec.add_development_dependency "rake", "~> 12.0"
   spec.add_development_dependency "gemsmith", "~> 8.2"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module FakeHttp
+class FakeHTTP
   # Gem identity information.
   module Identity
     def self.name
@@ -8,7 +8,7 @@ module FakeHttp
     end
 
     def self.label
-      "FakeHttp"
+      "FakeHTTP"
     end
 
     def self.version
