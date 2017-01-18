@@ -39,13 +39,31 @@ class FakeHTTP
     end
 
     def get(pattern, &block)
-      responder = Responder.new(pattern, block)
-      @fakes[:get] << responder
+      add_responder(:get, pattern, &block)
+    end
+
+    def post(pattern, &block)
+      add_responder(:post, pattern, &block)
+    end
+
+    def put(pattern, &block)
+      add_responder(:put, pattern, &block)
+    end
+
+    def delete(pattern, &block)
+      add_responder(:delete, pattern, &block)
     end
 
     def request(verb, uri, options = {})
       responder = @fakes[verb].detect { |responder| responder.match(uri) }
       responder.call(uri, options)
+    end
+
+    private
+
+    def add_responder(verb, pattern, &block)
+      responder = Responder.new(pattern, block)
+      @fakes[verb] << responder
     end
 
   end
