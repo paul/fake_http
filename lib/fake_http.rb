@@ -55,7 +55,9 @@ class FakeHTTP
     end
 
     def request(verb, uri, options = {})
-      responder = @fakes[verb].detect { |responder| responder.match(uri) }
+      path = URI.parse(uri).path
+      responder = @fakes[verb].detect { |responder| responder.match(path) }
+      raise "No responder defined for #{verb} #{uri}" unless responder
       responder.call(uri, options)
     end
 
