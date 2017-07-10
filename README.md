@@ -4,7 +4,7 @@
 
 <!-- Tocer[start]: Auto-generated, don't remove. -->
 
-# Table of Contents
+## Table of Contents
 
 - [Features](#features)
 - [Screencasts](#screencasts)
