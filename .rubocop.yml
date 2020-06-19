@@ -1,102 +1,163 @@
-Rails:
-  Enabled: true
+inherit_from:
+  - https://relaxed.ruby.style/rubocop.yml
+
+require:
+  - rubocop-rspec
+  - rubocop-performance
 
 AllCops:
   DisplayCopNames: true
   DisplayStyleGuide: true
+  TargetRubyVersion: 2.6
 
-  Include:
-    - "**/Rakefile"
-    - "**/config.ru"
   Exclude:
     - "vendor/**/*"
     - "spec/fixtures/**/*"
     - "bin/**/*"
-    - "script/**/*"
-Metrics/LineLength:
-  Max: 120
-Rails/Date:
-  Enabled: false
-Rails/TimeZone:
-  Enabled: false
-AllCops:
-  TargetRubyVersion: 2.3
-Style/AndOr:
-  EnforcedStyle: conditionals
-Style/CaseIndentation:
-  IndentOneStep: true
-Style/Documentation:
-  Enabled: false
-Style/EachWithObject:
-  Enabled: false
-Style/ExtraSpacing:
+
+Layout:
+  Severity: error
+Lint:
+  Severity: error
+
+Layout/HashAlignment:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table
+Layout/LineLength:
+  Enabled: true
+  Max: 140
+Lint/AmbiguousBlockAssociation:
   Exclude:
-    - "config/routes.rb"
-Style/FrozenStringLiteralComment:
+    - "spec/**/*"  # `expect { }.to change { }` is fine
+Lint/BooleanSymbol:
+  Exclude:
+    - "spec/**/*"  # Symbols like :true get used in these test quite a bit
+Lint/ShadowingOuterLocalVariable:
+  # Shadowing outer local variables with block parameters is often useful to
+  # not reinvent a new name for the same thing, it highlights the relation
+  # between the outer variable and the parameter. The cases where it's actually
+  # confusing are rare, and usually bad for other reasons already, for example
+  # because the method is too long.
   Enabled: false
+Metrics/BlockLength:
+  Exclude:
+    - Gemfile
+    - Guardfile
+    - shared_context
+  ExcludedMethods:
+    - configure
+    - context
+    - define
+    - describe
+    - it
+    - namespace
+    - specify
+    - task
+    - shared_examples_for
+    - shared_context
+    - feature
+Metrics/ClassLength:
+  Exclude:
+    - "spec/**/*_spec.rb"
+Naming/RescuedExceptionsVariableName:
+  PreferredName: ex
+Naming/FileName:
+  Enabled: false
+Naming/MethodName:
+  Enabled: false # welcome to the visitor pattern
+Naming/MethodParameterName:
+  Enabled: false
+Style/ClassAndModuleChildren:
+  Enabled: false
+Style/EmptyLiteral:
+  Enabled: false
+Style/FormatStringToken:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  Enabled: true
+Style/HashEachMethods:
+  Enabled: true
 Style/HashSyntax:
   Exclude:
-    - "lib/tasks/**/*"
-Style/MultilineOperationIndentation:
-  EnforcedStyle: indented
-Style/NumericLiterals:
+    - Rakefile
+    - "**/*.rake"
+Style/HashTransformKeys:
   Enabled: true
-Style/EmptyLinesAroundClassBody:
-  EnforcedStyle: empty_lines
-Style/PercentLiteralDelimiters:
-  PreferredDelimiters:
-    "%w": "[]"
-    "%W": "[]"
-    "%i": "[]"
-    "%I": "[]"
-    "%r": "()"
-Style/SignalException:
-  EnforcedStyle: semantic
-Style/SingleLineBlockParams:
+Style/HashTransformValues:
+  Enabled: true
+Style/MethodCallWithoutArgsParentheses:
+  Enabled: true
+Style/NumericLiterals:
   Enabled: false
 Style/StringLiterals:
+  Enabled: true
   EnforcedStyle: double_quotes
-Style/MultilineMethodCallIndentation:
-  Exclude:
-    - "spec/**/*.rb"
+Style/SymbolArray:
+  MinSize: 4
 
-# Rules that annoy me
-Style/SpaceInsideBrackets:
+# 0.81
+Lint/RaiseException:
+  Enabled: true
+Lint/StructNewOverride:
   Enabled: false
-Style/FormatString:
+
+# 0.82
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+Style/ExponentialNotation:
+  Enabled: true
+
+# 0.83
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+Style/SlicingWithRange:
+  Enabled: true
+
+# 0.84
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
+# 0.85
+Lint/MixedRegexpCaptureTypes:
+  Enabled: true
+Style/RedundantRegexpCharacterClass:
+  Enabled: true
+Style/RedundantRegexpEscape:
+  Enabled: true
+
+# Rspec
+Capybara/FeatureMethods:
+  Enabled: false
+RSpec/ContextWording:
+  Enabled: false
+RSpec/DescribeClass:
+  Enabled: false
+RSpec/DescribedClass:
+  Enabled: false
+RSpec/ExampleLength:
+  Max: 20
+RSpec/ExampleWording:
+  Enabled: false
+RSpec/ExpectChange:
+  EnforcedStyle: block
+RSpec/FilePath:
+  Enabled: false
+RSpec/ImplicitExpect:
+  Enabled: false
+RSpec/LeadingSubject:
+  Enabled: false
+RSpec/MessageSpies:
+  Enabled: false
+RSpec/MultipleExpectations:
+  Max: 4
+RSpec/NestedGroups:
+  Max: 4
+RSpec/NotToNot:
+  Enabled: false
+RSpec/ExpectInHook:
+  Enabled: false
+RSpec/LetSetup:
+  Enabled: false
+RSpec/NamedSubject:
   Enabled: false
 
-Rails/Output:
-  Severity: fatal
-  Exclude:
-    - "db/seeds.rb"
-    - "lib/lets_encrypt_route53.rb"
-    - "lib/task_helpers.rb"
-    - "lib/tasks/**/*"
-
-# Rubocop's global exclude seems to fail to exclude the bin/ dir, so set all
-# the cops that are failing manually, since most of these files are
-# auto-generated anyways. Also, if the rules also appear above, we need to copy
-# the same attrs, because YAML won't merge, only overwrite.
-
-# Style/StringLiterals:
-#   EnforcedStyle: double_quotes
-#   Exclude:
-#     - "bin/**/*"
-# Style/FrozenStringLiteralComment:
-#   Exclude:
-#     - "bin/**/*"
-# Style/LeadingCommentSpace:
-#   Exclude:
-#     - "bin/**/*"
-# Style/SpaceInsideParens:
-#   Exclude:
-#     - "bin/**/*"
-# Style/AlignParameters:
-#   Exclude:
-#     - "bin/**/*"
-# Style/ExtraSpacing:
-#   Exclude:
-#     - "bin/**/*"
-#   Exclude:
-#     - "config/routes.rb"

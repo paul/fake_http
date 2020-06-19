@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "fake_http/identity"
 
 require "http"
@@ -33,9 +35,8 @@ class FakeHTTP
   end
 
   class Builder
-
     def initialize
-      @fakes = Hash.new { |h,k| h[k] = Array.new }
+      @fakes = Hash.new { |h, k| h[k] = Array.new }
     end
 
     def get(pattern, &block)
@@ -58,6 +59,7 @@ class FakeHTTP
       path = URI.parse(uri).path
       responder = @fakes[verb].detect { |responder| responder.match(path) }
       raise "No responder defined for #{verb} #{uri}" unless responder
+
       responder.call(uri, options)
     end
 
@@ -67,7 +69,6 @@ class FakeHTTP
       responder = Responder.new(pattern, block)
       @fakes[verb] << responder
     end
-
   end
 
   require "mustermann"
@@ -88,7 +89,7 @@ class FakeHTTP
       HTTP::Response.new(status: status, version: "1.1", headers: headers, body: body.to_json)
     end
 
-    def status(new_status=nil)
+    def status(new_status = nil)
       @status = new_status if new_status
       @status
     end

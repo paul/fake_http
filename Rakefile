@@ -11,8 +11,8 @@ begin
   Reek::Rake::Task.new
   RuboCop::RakeTask.new
   # SCSSLint::RakeTask.new { |task| task.files = ["app/assets"] }
-rescue LoadError => error
-  puts error.message
+rescue LoadError => ex
+  puts ex.message
 end
 
 task default: %w[spec reek rubocop]

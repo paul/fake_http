@@ -3,3 +3,5 @@
 pkg/*
 Gemfile.lock
 tmp/*
+
+.rubocop-http*
