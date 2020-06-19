@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-$LOAD_PATH.push File.expand_path("../lib", __FILE__)
+$LOAD_PATH.push File.expand_path("lib", __dir__)
 require "fake_http/identity"
 
 Gem::Specification.new do |spec|
@@ -18,18 +18,15 @@ Gem::Specification.new do |spec|
     spec.cert_chain = [Gem.default_cert_path]
   end
 
-  spec.add_runtime_dependency "http", "~> 2"
+  spec.add_runtime_dependency "http", ">= 2"
   spec.add_runtime_dependency "mustermann"
 
-  spec.add_development_dependency "rake", "~> 12.0"
-  spec.add_development_dependency "gemsmith", "~> 10.1"
-  spec.add_development_dependency "pry", "~> 0.10"
-  spec.add_development_dependency "pry-byebug", "~> 3.4"
-  spec.add_development_dependency "pry-state", "~> 0.1"
-  spec.add_development_dependency "rspec", "~> 3.5"
   spec.add_development_dependency "guard-rspec", "~> 4.7"
-  spec.add_development_dependency "reek", "~> 4.5"
-  spec.add_development_dependency "rubocop", "~> 0.46"
+  spec.add_development_dependency "pry", ">= 0.10"
+  spec.add_development_dependency "rake", ">= 13"
+  spec.add_development_dependency "reek", "~> 6.0"
+  spec.add_development_dependency "rspec", "~> 3.5"
+  spec.add_development_dependency "rubocop", "~> 0.85"
 
   spec.files = Dir["lib/**/*"]
   spec.extra_rdoc_files = Dir["README*", "LICENSE*"]
