@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
 $LOAD_PATH.push File.expand_path("lib", __dir__)
-require "fake_http/identity"
+require "fake_http/version"
 
 Gem::Specification.new do |spec|
-  spec.name = FakeHTTP::Identity.name
-  spec.version = FakeHTTP::Identity.version
+  spec.name = "fake_http"
+  spec.version = FakeHTTP::VERSION
   spec.platform = Gem::Platform::RUBY
   spec.authors = ["Paul Sadauskas"]
   spec.email = ["psadauskas@gmail.com"]
-  spec.homepage = ""
-  spec.summary = ""
+
+  spec.summary = "Provides a Sinatra-like DSL for faking HTTP.rb requests"
+  spec.homepage = "https://github.com/paul/fake_http"
+
   spec.license = "MIT"
 
   if File.exist?(Gem.default_key_path) && File.exist?(Gem.default_cert_path)
