@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
+require "ostruct"
+
 require "http"
 require "mustermann"
+require "rack/utils"
 
 # Acts like the HTTP gem, but doesn't make any real requests. Instead, you can
 # manually stub them out:
@@ -14,14 +17,15 @@ require "mustermann"
 #     end
 #   end
 # end
+#
 # let(:client) { MyClient.new(http: http) }
 #
 class FakeHTTP
   include HTTP::Chainable
 
   def initialize(context = {}, &block)
-    @builder = Builder.new(context)
-    @builder.instance_eval(&block)
+    @builder = Builder.new
+    @builder.instance_exec(OpenStruct.new(context), &block)
   end
 
   def merge(&block)
@@ -59,8 +63,7 @@ class FakeHTTP
   end
 
   class Builder
-    def initialize(context = {})
-      @context = context
+    def initialize
       @fakes = Hash.new { |h, k| h[k] = [] }
     end
 
@@ -84,8 +87,11 @@ class FakeHTTP
       add_responder(:delete, pattern, &block)
     end
 
-    def request(verb, uri, options = {})
-      path = URI.parse(uri.to_s).path
+    def request(verb, url, options = {})
+      uri = URI.parse(url.to_s)
+      path = uri.path
+      query = Rack::Utils.default_query_parser.parse_nested_query(uri.query)
+
       responder = @fakes[verb].detect { |matcher| matcher.match(path) }
       unless responder
         raise <<~STR
@@ -95,8 +101,8 @@ class FakeHTTP
         STR
       end
 
-      requests[uri][verb] << options
-      responder.call(uri, options, @context[:content_type])
+      requests[path][verb] << options
+      responder.call(path, query, options)
     end
 
     # { :get => { "/foo/bar" => [ { request 1 options }, { request 2 options }, ... ] } }
@@ -107,27 +113,27 @@ class FakeHTTP
     private
 
     def add_responder(verb, pattern, &block)
-      responder = Responder.new(pattern, @context, block)
+      responder = Responder.new(pattern, block)
       @fakes[verb].unshift(responder)
     end
   end
 
   class Responder
-    def initialize(pattern, context, code)
+    DEFAULT_STATUS = 200
+    DEFAULT_CONTENT_TYPE = "application/json"
+    def initialize(pattern, code)
       @pattern = Mustermann.new(pattern)
-      @context, @code = context, code
+      @code = code
     end
-
-    attr_reader :context
 
     def match(uri)
       @pattern.match(uri)
     end
 
-    def call(uri, options, content_type)
-      params = @pattern.params(uri.to_s)
-      status(200)
-      content_type(content_type)
+    def call(path, query_params, options)
+      params = @pattern.params(path).merge(query_params)
+      status(DEFAULT_STATUS)
+      content_type(DEFAULT_CONTENT_TYPE)
       result = instance_exec(params, options, &@code)
       body = result.is_a?(Hash) ? result.to_json : result.to_s
 
@@ -139,8 +145,9 @@ class FakeHTTP
       @status
     end
 
-    def content_type(mime_type)
-      headers["Content-Type"] = mime_type || "application/json"
+    def content_type(mime_type = nil)
+      headers["Content-Type"] = mime_type if mime_type
+      headers["Content-Type"]
     end
 
     def headers

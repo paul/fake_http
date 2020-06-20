@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "http", ">= 2"
   spec.add_runtime_dependency "mustermann"
+  spec.add_runtime_dependency "rack"
 
   spec.add_development_dependency "guard-rspec", "~> 4.7"
   spec.add_development_dependency "pry", ">= 0.10"

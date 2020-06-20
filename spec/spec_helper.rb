@@ -2,8 +2,6 @@
 
 require "bundler/setup"
 require "pry"
-require "pry-byebug"
-require "pry-state"
 require "fake_http"
 Dir[File.join(File.dirname(__FILE__), "support/shared_contexts/**/*.rb")].sort.each { |file| require file }
 
